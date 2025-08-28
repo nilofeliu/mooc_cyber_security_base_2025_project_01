@@ -1,0 +1,40 @@
+{% extends "users/base.html" %}
+
+{% block extra_styles %}
+<style>
+    .form-container {
+        text-align: center;
+    }
+    .form-container h2 {
+        /* A slightly different style for the form header */
+        color: #fff;
+    }
+    /* Style the paragraph text inside the form */
+    .form-container p {
+        margin: 15px 0;
+    }
+    .form-container a {
+        font-weight: bold;
+    }
+    /* This will style the 'Username:', 'Password:' labels */
+    label {
+        display: none; /* Hide the default labels for a cleaner look */
+    }
+</style>
+{% endblock extra_styles %}
+
+
+{% block content %}
+<div class="form-container">
+    <h2>User Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.password.label_tag }}
+        {{ form.password }}
+        <button type="submit" class="btn">Login</button>
+    </form>
+    <p>Don't have an account? <a href="{% url 'register' %}">Register now</a></p>
+</div>
+{% endblock %}

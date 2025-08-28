@@ -1,0 +1,41 @@
+{% extends "users/base.html" %}
+
+{% block extra_styles %}
+<style>
+    .form-container {
+        text-align: center;
+    }
+    .form-container h2 {
+        color: #fff;
+    }
+    .form-container p {
+        margin: 15px 0;
+    }
+    .form-container a {
+        font-weight: bold;
+    }
+    label {
+        display: none; /* Hide default labels */
+    }
+    /* Style the error messages from Django for invalid fields */
+    .errorlist {
+        list-style-type: none;
+        padding: 0;
+        color: #ff5555;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock extra_styles %}
+
+
+{% block content %}
+<div class="form-container">
+    <h2>Create Account</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ register_form.as_p }}
+        <button type="submit" class="btn">Register</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "users/base.html" %}
+
+{% block extra_styles %}
+<style>
+    .user-page {
+        max-width: 800px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .profile-section {
+        text-align: center;
+        padding: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.5), 0 0 40px rgba(35, 213, 171, 0.3);
+        margin-bottom: 1rem;
+        transition: transform 0.3s ease;
+    }
+    .profile-pic:hover {
+        transform: scale(1.05);
+    }
+    .profile-section h2 {
+        margin-bottom: 0.5rem;
+    }
+    .profile-section .btn {
+        width: auto; /* Allow buttons to size to their content */
+        padding: 10px 20px;
+        margin-top: 1rem;
+    }
+    
+    .thoughts-section h3 {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 300;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 1rem;
+    }
+    textarea#id_text {
+        height: 100px;
+        resize: vertical;
+    }
+    
+    .thought {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #23d5ab;
+        transition: background-color 0.3s;
+    }
+    .thought:hover {
+        background: rgba(0, 0, 0, 0.4);
+    }
+    .thought p {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+    }
+    .thought small {
+        color: #aaa;
+        font-style: italic;
+    }
+</style>
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="user-page">
+    <div class="profile-section">
+        <img class="profile-pic" src="{{ user.profile.profile_picture.url }}">
+        <h2>Welcome, {{ user.username }}!</h2>
+
+        <form method="POST" enctype="multipart/form-data" style="margin-bottom: 1rem;">
+            {% csrf_token %}
+            {{ p_form.as_p }}
+            <button type="submit" name="update_picture" class="btn">Update Picture</button>
+        </form>
+        
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="thoughts-section">
+        <h3>Share a Thought</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ t_form.as_p }}
+            <button type="submit" name="post_thought" class="btn">Post</button>
+        </form>
+
+        <h3>Your Thoughts</h3>
+        {% for thought in thoughts %}
+            <div class="thought">
+                <p>{{ thought.text }}</p>
+                <small>{{ thought.created_at|date:"F d, Y, P" }}</small>
+            </div>
+        {% empty %}
+            <p style="text-align:center; color: #aaa;">You haven't shared any thoughts yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
