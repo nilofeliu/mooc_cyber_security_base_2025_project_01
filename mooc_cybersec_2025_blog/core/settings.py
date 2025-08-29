@@ -166,5 +166,6 @@ LOGOUT_REDIRECT_URL = 'login'
 
 # ... rest of your settings ...
 
-DEBUG = True  # FLAW 2: Debug mode enabled exposes sensitive information
-# FIX (commented): DEBUG = False
+# FLAW 2: Debug mode enabled exposes sensitive information
+DEBUG = True 
+# FIX : DEBUG = False

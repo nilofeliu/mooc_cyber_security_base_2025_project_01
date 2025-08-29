@@ -77,6 +77,10 @@
         <!-- FLAW 1: Shows target user's data instead of logged-in user -->
         <img class="profile-pic" src="{{ target_user.profile.profile_picture.url }}">
         <h2>Welcome, {{ target_user.username }}!</h2>
+        <!-- FIX (commented): Should always show logged-in user -->
+        <!-- <img class="profile-pic" src="{{ user.profile.profile_picture.url }}">
+        <h2>Welcome, {{ user.username }}!</h2> -->
+
 
         <form method="POST" enctype="multipart/form-data" style="margin-bottom: 1rem;">
             {% csrf_token %}
@@ -101,7 +105,9 @@
         <h3>Your Thoughts</h3>
         {% for thought in thoughts %}
             <div class="thought">
+                <!-- FLAW 5 - Cross Scripting (XSS) -->
                 <p>{{ thought.text|safe }}</p>
+                <!-- FIX FLAW 5 <p>{{ thought.text}}</p> -->
                 <small>{{ thought.created_at|date:"F d, Y, P" }}</small>
             </div>
         {% empty %}

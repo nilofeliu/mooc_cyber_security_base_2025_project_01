@@ -31,12 +31,17 @@ def register(request):
 def user_page(request):
     # FLAW 1: Broken Access Control - any user can view any user's profile
     user_id = request.GET.get('user_id', request.user.id)
+    # Fix 
+    # user_id = request.user.id
+
     try:
         target_user = User.objects.get(id=user_id)
         profile, created = Profile.objects.get_or_create(user=target_user)
     except User.DoesNotExist:
         target_user = request.user
         profile, created = Profile.objects.get_or_create(user=request.user)
+
+
     
     # Initialize forms BEFORE the POST handling
     p_form = ProfileUpdateForm(instance=profile)
@@ -74,6 +79,7 @@ def user_page(request):
 
 def flaw_sql_injection(request):
     thought = None
+    # FLAW 3 - Injection
     if request.GET.get('id'):
         thought_id = request.GET.get('id')
         with connection.cursor() as cursor:
@@ -84,3 +90,19 @@ def flaw_sql_injection(request):
             print(f"DEBUG - Result: {thought}")  # Add this debug line
     
     return render(request, 'users/thought.html', {'thought': thought})
+
+# FIX For Flaw 3
+#  def flaw_sql_injection(request):
+#      thoughts = None
+#      if request.GET.get('id'):
+#          thought_id = request.GET.get('id')
+#          try:
+#              thought_id = int(thought_id)  # Validate input
+#              with connection.cursor() as cursor:
+#                  query = "SELECT id, text FROM users_thought WHERE id = %s"
+#                  cursor.execute(query, [thought_id])
+#                  thoughts = cursor.fetchone()
+#          except ValueError:
+#              thoughts = None  # Handle invalid input
+     
+#      return render(request, 'users/thought.html', {'thoughts': thoughts})
