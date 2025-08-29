@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import RegistrationForm, ProfileUpdateForm, ThoughtForm
 from .models import Profile, Thought
+from django.contrib.auth.models import User
+from django.db import connection
 
 # The registration view that the server is looking for
 def register(request):
@@ -25,12 +27,21 @@ def register(request):
     return render(request=request, template_name="users/register.html", context={"register_form": form})
 
 
-# The secure and robust user page view
 @login_required
 def user_page(request):
-    # This line fixes the "User has no profile" error for old users
-    profile, created = Profile.objects.get_or_create(user=request.user)
-
+    # FLAW 1: Broken Access Control - any user can view any user's profile
+    user_id = request.GET.get('user_id', request.user.id)
+    try:
+        target_user = User.objects.get(id=user_id)
+        profile, created = Profile.objects.get_or_create(user=target_user)
+    except User.DoesNotExist:
+        target_user = request.user
+        profile, created = Profile.objects.get_or_create(user=request.user)
+    
+    # Initialize forms BEFORE the POST handling
+    p_form = ProfileUpdateForm(instance=profile)
+    t_form = ThoughtForm()
+    
     if request.method == 'POST':
         if 'update_picture' in request.POST:
             p_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
@@ -46,15 +57,30 @@ def user_page(request):
                 thought.save()
                 messages.success(request, 'Your thought has been shared!')
                 return redirect('user_page')
-    else:
-        p_form = ProfileUpdateForm(instance=profile)
-        t_form = ThoughtForm()
 
-    thoughts = Thought.objects.filter(user=request.user).order_by('-created_at')
+    # FLAW 1: Shows any user's thoughts
+    thoughts = Thought.objects.filter(user=target_user).order_by('-created_at')
+    # FIX (commented): Only show current user's thoughts
+    # thoughts = Thought.objects.filter(user=request.user).order_by('-created_at')
 
     context = {
         'p_form': p_form,
         't_form': t_form,
-        'thoughts': thoughts
+        'thoughts': thoughts,
+        'target_user': target_user
     }
     return render(request, 'users/user_page.html', context)
+
+
+def flaw_sql_injection(request):
+    thought = None
+    if request.GET.get('id'):
+        thought_id = request.GET.get('id')
+        with connection.cursor() as cursor:
+            query = f"SELECT id, text FROM users_thought WHERE id = {thought_id}"
+            print(f"DEBUG - SQL Query: {query}")  # Add this debug line
+            cursor.execute(query)
+            thought = cursor.fetchall() # change this to get all results
+            print(f"DEBUG - Result: {thought}")  # Add this debug line
+    
+    return render(request, 'users/thought.html', {'thought': thought})

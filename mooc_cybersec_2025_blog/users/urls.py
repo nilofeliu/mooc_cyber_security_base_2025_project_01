@@ -6,7 +6,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.user_page, name='user_page'),
     path('register/', views.register, name='register'),
-
+    path('search-thought/', views.flaw_sql_injection, name='search_thought'),
     # This line is the crucial one.
     # It defines the URL for the user page and gives it the name 'user_page'.
     path('profile/', views.user_page, name='user_page'),

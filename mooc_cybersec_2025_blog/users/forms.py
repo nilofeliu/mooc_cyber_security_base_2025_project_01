@@ -37,6 +37,7 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = ['profile_picture']
 
+
 class ThoughtForm(forms.ModelForm):
     class Meta:
         model = Thought

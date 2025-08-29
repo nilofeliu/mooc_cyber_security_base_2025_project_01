@@ -4,10 +4,14 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics')
+        # Change ImageField to FileField to allow any file type
+        # Flaw 4 
+    profile_picture = models.FileField(default='default.jpg', upload_to='profile_pics')
 
     def __str__(self):
         return f'{self.user.username} Profile'
+    
+    
 
 class Thought(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

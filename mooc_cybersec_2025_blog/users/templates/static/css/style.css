@@ -1,12 +1,17 @@
 body {
-    background: linear-gradient(-45deg, #23a6d5, #23d5ab, #ee7752, #e73c7e);
+    background: linear-gradient(-45deg, 
+        rgba(128, 128, 128, 0.4),    /* Medium Gray */
+        rgba(192, 192, 192, 0.4),    /* Silver */
+        rgba(96, 96, 96, 0.4),       /* Dim Gray */
+        rgba(169, 169, 169, 0.4)     /* Dark Gray */
+    );
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
-    color: white;
+    color: #f0f0f0; /* Light Gray text */
     font-family: sans-serif;
     margin: 0;
     padding: 20px;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 @keyframes gradient {
@@ -22,29 +27,37 @@ body {
 }
 
 .form-container, .user-page {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6); /* More transparent black */
     padding: 2rem;
     border-radius: 10px;
     max-width: 500px;
     margin: auto;
+    backdrop-filter: blur(5px); /* Optional: adds blur effect for better readability */
 }
 
 .btn {
-    background-color: #23a6d5;
-    color: white;
+    background-color: rgba(100, 100, 100, 0.8); /* Dark Gray */
+    color: #fff;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 1rem;
+    transition: background-color 0.3s ease;
 }
 
 .btn:hover {
-    background-color: #23d5ab;
+    background-color: rgba(70, 70, 70, 0.9); /* Slightly darker on hover */
 }
 
 a {
-    color: #23d5ab;
+    color: #d3d3d3; /* Light Gray links */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffffff; /* White on hover */
+    text-decoration: underline;
 }
 
 .profile-pic {
@@ -52,11 +65,31 @@ a {
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.3); /* Light border */
 }
 
 .thought {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.08); /* More transparent */
     padding: 1rem;
     border-radius: 5px;
     margin-bottom: 1rem;
+    border-left: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Login Page Background */
+body.login-page {
+    background: url('../images/background_01.jpg') center/100% 100% no-repeat fixed;
+    animation: none;
+}
+
+/* Registration Page Background */
+body.register-page {
+    background: url('../images/background_02.jpg') center/100% 100% no-repeat fixed;
+    animation: none;
+}
+
+/* Profile Page Background */
+body.profile-page {
+    background: url('../images/background_03.jpg') center/100% 100% no-repeat fixed;
+    animation: none;
 }

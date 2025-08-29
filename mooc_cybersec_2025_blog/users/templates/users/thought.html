@@ -1,0 +1,21 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+<div class="user-page">
+    <h2>Search Thought by ID</h2>
+    
+    <form method="GET">
+        <input type="text" name="id" placeholder="Enter thought ID" value="{{ request.GET.id }}">
+        <button type="submit" class="btn">Search</button>
+    </form>
+    
+    {% if thought %}
+        <div class="thought">
+            <p>{{ thought.1 }}</p>  <!-- thought.text from SQL result -->
+            <small>ID: {{ thought.0 }}</small>  <!-- thought.id from SQL result -->
+        </div>
+    {% else %}
+        <p>No thought found or enter an ID to search.</p>
+    {% endif %}
+</div>
+{% endblock %}
